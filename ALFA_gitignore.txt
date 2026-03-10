@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Uploads
+uploads/
+*.pdf
+*.docx
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker volumes (not needed in git)
+postgres_data/
+redis_data/
+chroma_data/
+ollama_data/
+
+# Prisma
+prisma/migrations/dev.db
+
+# Testing
+coverage/

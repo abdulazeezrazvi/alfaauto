@@ -1,0 +1,49 @@
+# ============================================================
+# ALFA Platform — Environment Variables
+# Copy this file: cp .env.example .env
+# Then fill in your values
+# ============================================================
+
+# ─── DATABASE ────────────────────────────────────────────────
+DATABASE_URL=postgresql://alfa_user:alfa_dev_pass@localhost:5432/alfa_db
+
+# ─── REDIS ───────────────────────────────────────────────────
+REDIS_URL=redis://:alfa_redis_dev@localhost:6379
+
+# ─── AI SERVICES ─────────────────────────────────────────────
+OLLAMA_URL=http://localhost:11434
+CHROMA_URL=http://localhost:8000
+CHROMA_TOKEN=                          # Leave blank for dev (no auth in dev)
+
+# ─── JWT AUTH ────────────────────────────────────────────────
+JWT_SECRET=dev_jwt_secret_change_in_production_minimum_64_chars
+JWT_EXPIRES_IN=7d
+
+# ─── WHATSAPP API (Optional for trial — use MOCK_MODE=true instead) ──
+# Get these from: developers.facebook.com > Your App > WhatsApp > API Setup
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_ACCESS_TOKEN=
+WEBHOOK_VERIFY_TOKEN=alfa_webhook_verify_token
+
+# ─── MOCK MODE (Set true to test without real WhatsApp API) ──
+MOCK_WHATSAPP=true
+
+# ─── GOOGLE (Optional for trial) ─────────────────────────────
+# Get from: console.cloud.google.com > Service Accounts
+GOOGLE_SERVICE_ACCOUNT_EMAIL=
+GOOGLE_SERVICE_ACCOUNT_KEY=
+
+# ─── BILLING (Optional for trial) ────────────────────────────
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+BILLING_ENABLED=false                  # Set false to skip billing in trial
+
+# ─── APP ─────────────────────────────────────────────────────
+PORT=3001
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+ENCRYPTION_KEY=dev_encryption_key_32chars_here!
+
+# ─── UPLOADS ─────────────────────────────────────────────────
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE_MB=10

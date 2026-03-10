@@ -1,0 +1,291 @@
+// ============================================================
+// ALFA Platform — Prisma Schema
+// Run: npx prisma db push   (creates tables)
+// Run: npx prisma studio    (visual DB browser)
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── TENANT (one per business customer) ──────────────────────
+model Tenant {
+  id                   String   @id @default(uuid())
+  businessName         String
+  ownerEmail           String   @unique
+  ownerName            String?
+  businessType         String?
+  waPhoneNumberId      String?
+  waAccessTokenEnc     String?  // Encrypted
+  waPhoneDisplay       String?
+  googleSheetId        String?
+  chromaCollection     String?
+  isActive             Boolean  @default(true)
+  waConnected          Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  aiConfig       TenantAiConfig?
+  subscription   Subscription?
+  googleCreds    GoogleCredentials?
+  messages       Message[]
+  crmContacts    CrmContact[]
+  orders         Order[]
+  appointments   Appointment[]
+  products       Product[]
+  broadcasts     Broadcast[]
+  knowledgeDocs  KnowledgeDoc[]
+  teamMembers    TeamMember[]
+  learningEntries LearningEntry[]
+
+  @@map("tenants")
+}
+
+// ─── AI CONFIG ────────────────────────────────────────────────
+model TenantAiConfig {
+  id                  String   @id @default(uuid())
+  tenantId            String   @unique
+  systemPrompt        String?  @db.Text
+  modelName           String   @default("llama3")
+  temperature         Float    @default(0.7)
+  maxContextMessages  Int      @default(10)
+  language            String   @default("auto")
+  businessHours       Json?
+  fallbackMessage     String?
+  humanTakeoverKeyword String  @default("agent")
+  updatedAt           DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("tenant_ai_config")
+}
+
+// ─── GOOGLE CREDENTIALS ───────────────────────────────────────
+model GoogleCredentials {
+  id             String   @id @default(uuid())
+  tenantId       String   @unique
+  clientEmail    String
+  privateKeyEnc  String   @db.Text
+  sheetId        String?
+  driveFolderId  String?
+  connectedAt    DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("google_credentials")
+}
+
+// ─── SUBSCRIPTION ─────────────────────────────────────────────
+model Subscription {
+  id                  String    @id @default(uuid())
+  tenantId            String    @unique
+  plan                String    @default("trial")  // trial, starter, professional, business
+  razorpaySubId       String?
+  razorpayCustomerId  String?
+  amount              Int       @default(0)
+  status              String    @default("trial")  // trial, active, cancelled, past_due
+  trialEndsAt         DateTime  @default(dbgenerated("NOW() + INTERVAL '14 days'"))
+  currentPeriodEnd    DateTime?
+  cancelledAt         DateTime?
+  createdAt           DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// ─── KNOWLEDGE DOCUMENTS ──────────────────────────────────────
+model KnowledgeDoc {
+  id           String    @id @default(uuid())
+  tenantId     String
+  title        String
+  sourceType   String    // pdf, text, sheets, url
+  rawContent   String?   @db.Text
+  chunkCount   Int       @default(0)
+  status       String    @default("pending")  // pending, indexing, indexed, failed
+  driveFileId  String?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  indexedAt    DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("knowledge_docs")
+}
+
+// ─── MESSAGES ─────────────────────────────────────────────────
+model Message {
+  id             String    @id @default(uuid())
+  tenantId       String
+  waMessageId    String?   @unique
+  customerPhone  String
+  content        String    @db.Text
+  role           String    // user, bot, agent
+  messageType    String    @default("text")
+  mediaUrl       String?
+  intent         String?
+  flowData       Json?
+  deliveryStatus String?
+  deliveredAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, customerPhone])
+  @@index([createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+// ─── CRM CONTACTS ─────────────────────────────────────────────
+model CrmContact {
+  id                  String    @id @default(uuid())
+  tenantId            String
+  phone               String
+  name                String?
+  email               String?
+  city                String?
+  tags                String[]  @default([])
+  notes               String?   @db.Text
+  totalOrders         Int       @default(0)
+  totalSpent          Decimal   @default(0)
+  messageCount        Int       @default(0)
+  lastMessage         String?
+  lastSeen            DateTime?
+  optedInBroadcast    Boolean   @default(true)
+  firstContactAt      DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, phone])
+  @@map("crm_contacts")
+}
+
+// ─── ORDERS ───────────────────────────────────────────────────
+model Order {
+  id            String   @id @default(uuid())
+  tenantId      String
+  orderNumber   String
+  customerPhone String
+  customerName  String?
+  itemsSummary  String?
+  itemsJson     Json?
+  totalAmount   Decimal?
+  status        String   @default("confirmed")
+  deliveryAddr  String?
+  notes         String?
+  sheetRow      Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, orderNumber])
+  @@map("orders")
+}
+
+// ─── APPOINTMENTS ─────────────────────────────────────────────
+model Appointment {
+  id              String   @id @default(uuid())
+  tenantId        String
+  apptNumber      String
+  customerPhone   String
+  customerName    String?
+  service         String?
+  apptDate        DateTime
+  durationMinutes Int      @default(60)
+  status          String   @default("confirmed")
+  notes           String?
+  reminder24hSent Boolean  @default(false)
+  reminder1hSent  Boolean  @default(false)
+  sheetRow        Int?
+  createdAt       DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, apptNumber])
+  @@index([tenantId, apptDate])
+  @@map("appointments")
+}
+
+// ─── PRODUCTS (E-commerce) ────────────────────────────────────
+model Product {
+  id            String   @id @default(uuid())
+  tenantId      String
+  name          String
+  description   String?  @db.Text
+  price         Decimal
+  category      String?
+  imageUrl      String?
+  stockQuantity Int      @default(-1)  // -1 = unlimited
+  isAvailable   Boolean  @default(true)
+  sku           String?
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("products")
+}
+
+// ─── BROADCASTS ───────────────────────────────────────────────
+model Broadcast {
+  id              String    @id @default(uuid())
+  tenantId        String
+  title           String?
+  messageContent  String    @db.Text
+  mediaUrl        String?
+  audienceFilter  Json?
+  recipientCount  Int       @default(0)
+  sentCount       Int       @default(0)
+  failedCount     Int       @default(0)
+  estimatedCost   Decimal?
+  actualCost      Decimal?
+  status          String    @default("draft")
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  createdAt       DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("broadcasts")
+}
+
+// ─── LEARNING ENTRIES ─────────────────────────────────────────
+model LearningEntry {
+  id           String   @id @default(uuid())
+  tenantId     String
+  userMessage  String   @db.Text
+  botReply     String?  @db.Text
+  correction   String?  @db.Text
+  source       String?
+  indexed      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("learning_entries")
+}
+
+// ─── TEAM MEMBERS ─────────────────────────────────────────────
+model TeamMember {
+  id           String    @id @default(uuid())
+  tenantId     String
+  email        String
+  name         String?
+  role         String    @default("agent")
+  passwordHash String?
+  isActive     Boolean   @default(true)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@map("team_members")
+}

@@ -1,0 +1,72 @@
+# ============================================================
+# ALFA — Local Development Docker Compose
+# Run: docker compose -f docker/docker-compose.dev.yml up -d
+# No SSL, no domain needed — just localhost
+# ============================================================
+
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: alfa_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       alfa_db
+      POSTGRES_USER:     alfa_user
+      POSTGRES_PASSWORD: alfa_dev_pass
+    ports:
+      - "5432:5432"   # Exposed for local dev tools (TablePlus, DBeaver etc.)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:     ["CMD-SHELL", "pg_isready -U alfa_user -d alfa_db"]
+      interval: 5s
+      timeout:  3s
+      retries:  10
+
+  redis:
+    image: redis:7-alpine
+    container_name: alfa_redis
+    restart: unless-stopped
+    command: redis-server --requirepass alfa_redis_dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: alfa_chroma
+    restart: unless-stopped
+    environment:
+      IS_PERSISTENT:       "TRUE"
+      ANONYMIZED_TELEMETRY: "FALSE"
+      # No auth in dev mode for easy testing
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: alfa_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      OLLAMA_NUM_PARALLEL:      1      # 1 at a time on dev machine
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_KEEP_ALIVE:        "5m"
+    # CPU only — no GPU required
+    # After starting: docker exec alfa_ollama ollama pull llama3
+    # Also run:       docker exec alfa_ollama ollama pull nomic-embed-text
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:
+  ollama_data:
