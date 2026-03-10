@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALFA — AI-Powered WhatsApp Business Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--navy2:#0F2044;--navy3:#162952;
+  --blue:#1A56DB;--blue2:#2563EB;--blue-light:#EFF6FF;
+  --gold:#C8972A;--gold2:#F0B840;
+  --slate:#64748B;--slate2:#94A3B8;
+  --white:#FFFFFF;--offwhite:#F8FAFC;--border:#E2E8F0;
+  --text:#1E293B;--text2:#475569;
+  --green:#16A34A;--red:#DC2626;
+  --shadow:0 4px 24px rgba(10,22,40,0.12);
+  --shadow-lg:0 20px 60px rgba(10,22,40,0.18);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 48px;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo-mark{
+  width:36px;height:36px;background:var(--navy);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:var(--gold2);
+}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy)}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text2);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--navy)}
+.nav-cta{display:flex;align-items:center;gap:12px}
+.btn-ghost{font-size:14px;font-weight:500;color:var(--navy);text-decoration:none;padding:8px 20px;border:1px solid var(--border);border-radius:8px;transition:all 0.2s}
+.btn-ghost:hover{background:var(--offwhite)}
+.btn-primary{font-size:14px;font-weight:600;color:var(--white);background:var(--navy);padding:9px 22px;border-radius:8px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--navy2);transform:translateY(-1px);box-shadow:var(--shadow)}
+
+/* HERO */
+.hero{
+  min-height:100vh;padding:140px 48px 80px;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,#0D1F45 100%);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 20%,rgba(26,86,219,0.15) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 80%,rgba(200,151,42,0.08) 0%,transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 100% 80% at 50% 0%,black 40%,transparent 100%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  color:var(--gold2);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  padding:7px 18px;border-radius:999px;margin-bottom:36px;position:relative;
+  animation:fadeUp 0.8s ease both;
+}
+.hero-badge-dot{width:6px;height:6px;background:var(--gold2);border-radius:50%;box-shadow:0 0 8px var(--gold2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(44px,7vw,84px);font-weight:800;
+  color:var(--white);line-height:1.08;margin-bottom:28px;
+  position:relative;animation:fadeUp 0.8s 0.1s ease both;
+}
+.hero h1 span{color:var(--gold2)}
+.hero-sub{
+  font-size:clamp(16px,2vw,20px);color:rgba(255,255,255,0.65);
+  max-width:620px;line-height:1.7;margin-bottom:48px;
+  position:relative;animation:fadeUp 0.8s 0.2s ease both;
+}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;animation:fadeUp 0.8s 0.3s ease both}
+.btn-hero{
+  font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;
+  text-decoration:none;transition:all 0.25s;cursor:pointer;border:none;
+}
+.btn-hero-primary{background:var(--gold2);color:var(--navy);box-shadow:0 4px 20px rgba(200,151,42,0.35)}
+.btn-hero-primary:hover{background:var(--white);transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,151,42,0.4)}
+.btn-hero-ghost{background:rgba(255,255,255,0.08);color:var(--white);border:1px solid rgba(255,255,255,0.2)}
+.btn-hero-ghost:hover{background:rgba(255,255,255,0.15)}
+
+.hero-trust{
+  margin-top:60px;position:relative;animation:fadeUp 0.8s 0.4s ease both;
+  color:rgba(255,255,255,0.4);font-size:13px;letter-spacing:0.5px;
+}
+.hero-trust-logos{display:flex;align-items:center;justify-content:center;gap:32px;margin-top:16px;flex-wrap:wrap}
+.trust-logo{
+  padding:8px 20px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;
+  font-size:13px;font-weight:600;color:rgba(255,255,255,0.35);letter-spacing:0.5px;
+}
+
+/* STATS BAR */
+.stats-bar{background:var(--offwhite);border-bottom:1px solid var(--border);padding:40px 48px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.stat-item{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:40px;font-weight:700;color:var(--navy)}
+.stat-num span{color:var(--blue2)}
+.stat-label{font-size:13px;color:var(--slate);margin-top:4px;font-weight:500}
+
+/* SECTIONS */
+.section{padding:100px 48px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--blue2);margin-bottom:16px;
+}
+.section-eyebrow::before{content:'';width:24px;height:2px;background:var(--blue2)}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:16px}
+.section-body{font-size:17px;color:var(--text2);line-height:1.8;max-width:560px}
+
+/* FEATURES */
+.features-section{background:var(--white)}
+.features-header{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:80px}
+.features-visual{
+  background:var(--navy);border-radius:20px;padding:32px;
+  font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,0.6);
+  line-height:2;box-shadow:var(--shadow-lg);
+}
+.fv-line .kw{color:#7DD3FC}.fv-line .str{color:#86EFAC}.fv-line .fn{color:#C4B5FD}.fv-line .num{color:#FCD34D}
+
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.feat-card{background:var(--white);padding:36px 32px;transition:background 0.2s}
+.feat-card:hover{background:var(--offwhite)}
+.feat-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:20px;
+  background:var(--blue-light);
+}
+.feat-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.feat-desc{font-size:14px;color:var(--text2);line-height:1.7}
+.feat-tag{
+  display:inline-block;margin-top:14px;
+  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 10px;border-radius:4px;
+}
+.ft-unique{background:#FEF3C7;color:#92400E}
+.ft-core{background:#EFF6FF;color:#1D4ED8}
+.ft-new{background:#F0FDF4;color:#166534}
+
+/* UNIQUE FEATURES HIGHLIGHT */
+.unique-section{background:var(--navy);padding:100px 48px}
+.unique-inner{max-width:1100px;margin:0 auto}
+.unique-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.unique-card{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;padding:32px;transition:all 0.2s;
+}
+.unique-card:hover{background:rgba(255,255,255,0.08);border-color:var(--gold2);transform:translateY(-4px)}
+.unique-card-num{
+  font-family:'Playfair Display',serif;font-size:42px;font-weight:700;
+  color:rgba(200,151,42,0.2);line-height:1;margin-bottom:16px;
+}
+.unique-card-title{font-size:18px;font-weight:700;color:var(--white);margin-bottom:10px}
+.unique-card-desc{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7}
+.unique-badge{
+  margin-top:16px;display:inline-block;
+  background:rgba(200,151,42,0.15);border:1px solid rgba(200,151,42,0.3);
+  color:var(--gold2);font-size:11px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:4px 12px;border-radius:4px;
+}
+
+/* COMPARISON TABLE */
+.compare-section{background:var(--offwhite);padding:100px 48px}
+.compare-inner{max-width:900px;margin:0 auto}
+.compare-table{width:100%;border-collapse:collapse;margin-top:48px;background:var(--white);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.compare-table th{
+  padding:20px 24px;font-size:13px;font-weight:700;letter-spacing:0.5px;
+  background:var(--navy);color:var(--white);text-align:left;
+}
+.compare-table th:first-child{text-align:left}
+.compare-table th.alfa-col{background:var(--blue2);color:var(--white)}
+.compare-table td{
+  padding:16px 24px;font-size:14px;border-bottom:1px solid var(--border);
+  color:var(--text2);
+}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:var(--offwhite)}
+.check-yes{color:var(--green);font-size:18px;font-weight:700}
+.check-no{color:var(--slate2);font-size:18px}
+.check-alfa{color:var(--blue2);font-size:18px;font-weight:700}
+
+/* PRICING */
+.pricing-section{padding:100px 48px;background:var(--white)}
+.pricing-inner{max-width:1100px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.price-card{
+  background:var(--offwhite);border:1px solid var(--border);
+  border-radius:20px;padding:36px;position:relative;
+  display:flex;flex-direction:column;
+}
+.price-card.featured{
+  background:var(--navy);border-color:var(--navy);
+  box-shadow:var(--shadow-lg);transform:scale(1.03);
+}
+.price-popular{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:var(--gold2);color:var(--navy);
+  font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 16px;border-radius:999px;white-space:nowrap;
+}
+.price-tier{font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);margin-bottom:16px}
+.price-card.featured .price-tier{color:rgba(255,255,255,0.5)}
+.price-amount{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--navy);line-height:1}
+.price-card.featured .price-amount{color:var(--white)}
+.price-amount sup{font-size:24px;font-weight:600;vertical-align:super}
+.price-mo{font-size:14px;color:var(--slate);margin-bottom:8px}
+.price-card.featured .price-mo{color:rgba(255,255,255,0.5)}
+.price-desc{font-size:13px;color:var(--text2);margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);font-style:italic;line-height:1.6}
+.price-card.featured .price-desc{color:rgba(255,255,255,0.55);border-color:rgba(255,255,255,0.1)}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:12px;flex:1}
+.price-list li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)}
+.price-card.featured .price-list li{color:rgba(255,255,255,0.75)}
+.price-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.price-list li.no{color:var(--slate2)}
+.price-list li.no::before{content:'–';color:var(--slate2)}
+.price-btn{
+  margin-top:28px;padding:13px;border-radius:10px;
+  font-size:14px;font-weight:700;text-decoration:none;
+  text-align:center;transition:all 0.2s;cursor:pointer;border:none;
+}
+.price-btn-outline{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}
+.price-btn-outline:hover{background:var(--navy);color:var(--white)}
+.price-btn-fill{background:var(--gold2);color:var(--navy)}
+.price-btn-fill:hover{background:var(--white);transform:translateY(-1px)}
+
+/* HOW IT WORKS */
+.how-section{background:var(--offwhite);padding:100px 48px}
+.how-inner{max-width:900px;margin:0 auto}
+.how-steps{display:flex;flex-direction:column;gap:0;margin-top:56px}
+.how-step{display:flex;gap:32px;padding-bottom:48px;position:relative}
+.how-step:last-child{padding-bottom:0}
+.how-step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:56px}
+.how-step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--navy);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:700;
+  flex-shrink:0;
+}
+.how-step-line{width:2px;flex:1;background:linear-gradient(to bottom,var(--navy),transparent);margin-top:8px;min-height:32px}
+.how-step-content{padding-top:12px}
+.how-step-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.how-step-desc{font-size:15px;color:var(--text2);line-height:1.7;max-width:600px}
+
+/* CTA */
+.cta-section{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);
+  padding:100px 48px;text-align:center;
+}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,60px);font-weight:800;color:var(--white);margin-bottom:20px}
+.cta-title span{color:var(--gold2)}
+.cta-body{font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:48px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cta-form{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:480px;margin:0 auto}
+.cta-input{
+  flex:1;min-width:220px;padding:14px 20px;border-radius:10px;
+  border:none;font-size:15px;font-family:'DM Sans',sans-serif;
+  background:rgba(255,255,255,0.1);color:var(--white);
+  border:1px solid rgba(255,255,255,0.2);outline:none;
+}
+.cta-input::placeholder{color:rgba(255,255,255,0.4)}
+.cta-input:focus{border-color:var(--gold2);background:rgba(255,255,255,0.15)}
+
+/* FOOTER */
+footer{background:var(--navy);padding:60px 48px 32px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:48px}
+.footer-brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.footer-brand-mark{width:40px;height:40px;background:var(--gold2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:var(--navy)}
+.footer-brand-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--white)}
+.footer-brand-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;max-width:280px}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:20px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:14px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:13px;color:rgba(255,255,255,0.3)}
+.footer-legal{display:flex;gap:24px}
+.footer-legal a{font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none}
+.footer-legal a:hover{color:rgba(255,255,255,0.6)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .hero{padding:120px 24px 60px}
+  .section{padding:60px 24px}
+  .stats-inner,.features-header,.unique-grid,.pricing-grid,.footer-top{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .compare-section,.unique-section,.how-section,.pricing-section,.cta-section{padding:60px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">A</div>
+    <div class="nav-logo-text">ALFA</div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#compare">Compare</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#how">How It Works</a>
+    <a href="/docs">Docs</a>
+  </div>
+  <div class="nav-cta">
+    <a href="/login" class="btn-ghost">Sign In</a>
+    <a href="/register" class="btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Now Live — AI-Powered WhatsApp Automation
+  </div>
+  <h1>The <span>Intelligent</span> WhatsApp<br>Business Platform</h1>
+  <p class="hero-sub">Connect your WhatsApp API, train the AI on your business, automate orders, appointments, and customer support — all from one professional platform.</p>
+  <div class="hero-actions">
+    <a href="/register" class="btn-hero btn-hero-primary">Start Free 14-Day Trial</a>
+    <a href="#features" class="btn-hero btn-hero-ghost">See All Features →</a>
+  </div>
+  <div class="hero-trust">
+    <div>Trusted by businesses across India</div>
+    <div class="hero-trust-logos">
+      <div class="trust-logo">RESTAURANTS</div>
+      <div class="trust-logo">CLINICS</div>
+      <div class="trust-logo">E-COMMERCE</div>
+      <div class="trust-logo">SALONS</div>
+      <div class="trust-logo">REAL ESTATE</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">24<span>×7</span></div>
+      <div class="stat-label">Automated Customer Support</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>₹</span>0</div>
+      <div class="stat-label">AI Cost Per Conversation</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Data Privacy & Isolation</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>&lt;</span>3s</div>
+      <div class="stat-label">Average Bot Response Time</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section features-section" id="features">
+  <div class="section-inner">
+    <div class="features-header">
+      <div>
+        <div class="section-eyebrow">Platform Features</div>
+        <h2 class="section-title">Everything your business needs to automate WhatsApp</h2>
+        <p class="section-body">ALFA combines official WhatsApp Business API with self-hosted AI to give you a complete customer communication platform — with features no competitor offers.</p>
+      </div>
+      <div class="features-visual">
+        <div class="fv-line"><span class="kw">const</span> <span class="fn">alfaBot</span> = <span class="kw">new</span> <span class="fn">ALFA</span>({</div>
+        <div class="fv-line">&nbsp;&nbsp;business: <span class="str">"My Business"</span>,</div>
+        <div class="fv-line">&nbsp;&nbsp;ai: <span class="str">"ollama/llama3"</span>,</div>
+        <div class="fv-line">&nbsp;&nbsp;knowledge: <span class="str">"./docs"</span>,</div>
+        <div class="fv-line">&nbsp;&nbsp;sheets: <span class="str">GOOGLE_SHEET_ID</span>,</div>
+        <div class="fv-line">&nbsp;&nbsp;crm: <span class="kw">true</span>,</div>
+        <div class="fv-line">&nbsp;&nbsp;ecommerce: <span class="kw">true</span></div>
+        <div class="fv-line">});</div>
+        <div class="fv-line">&nbsp;</div>
+        <div class="fv-line"><span class="kw">await</span> alfaBot.<span class="fn">goLive</span>();</div>
+        <div class="fv-line"><span class="kw" style="color:#86EFAC">// ✓ Bot is live. Serving customers 24×7</span></div>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <div class="feat-title">Self-Hosted AI (Ollama)</div>
+        <div class="feat-desc">Run Llama 3 on your own server. Zero per-token cost. Your customer data never leaves your infrastructure. Train on unlimited business documents.</div>
+        <span class="feat-tag ft-unique">Only on ALFA</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧠</div>
+        <div class="feat-title">Auto-Learning AI</div>
+        <div class="feat-desc">The AI learns from every conversation automatically. Correct a wrong answer once — it never makes that mistake again. Gets smarter every day.</div>
+        <span class="feat-tag ft-unique">Only on ALFA</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">👥</div>
+        <div class="feat-title">Built-in CRM</div>
+        <div class="feat-desc">Full customer profiles, conversation history, purchase history, tags, notes, and segments. Know every customer before you reply.</div>
+        <span class="feat-tag ft-unique">Only on ALFA</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🛒</div>
+        <div class="feat-title">E-commerce Store Builder</div>
+        <div class="feat-desc">Build a product catalogue inside ALFA. Customers browse and order via WhatsApp. Inventory tracked. Orders synced to Google Sheets instantly.</div>
+        <span class="feat-tag ft-unique">Only on ALFA</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Google Sheets Sync</div>
+        <div class="feat-desc">Two-way live sync with Google Sheets. Orders and appointments saved automatically. Admin updates prices/availability — bot knows instantly.</div>
+        <span class="feat-tag ft-unique">Only on ALFA</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📅</div>
+        <div class="feat-title">Smart Appointment Engine</div>
+        <div class="feat-desc">AI books, reschedules, and cancels appointments conversationally. Auto-reminders 24hrs and 1hr before. Zero no-shows.</div>
+        <span class="feat-tag ft-core">Core</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📣</div>
+        <div class="feat-title">Broadcast Campaigns</div>
+        <div class="feat-desc">Send targeted promotions to segmented customer lists. Built-in cost estimator shows Meta charges before sending. Schedule in advance.</div>
+        <span class="feat-tag ft-core">Core</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔀</div>
+        <div class="feat-title">Visual Flow Builder</div>
+        <div class="feat-desc">Drag and drop to build custom conversation flows. No coding. Create complex multi-step journeys for onboarding, support, and sales.</div>
+        <span class="feat-tag ft-core">Core</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📈</div>
+        <div class="feat-title">Analytics & Insights</div>
+        <div class="feat-desc">Message volume, response rate, conversion funnels, top questions, peak hours. Know exactly how your bot is performing.</div>
+        <span class="feat-tag ft-core">Core</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNIQUE FEATURES DEEP DIVE -->
+<section class="unique-section">
+  <div class="unique-inner">
+    <div class="section-eyebrow" style="color:var(--gold2)">What Makes ALFA Different</div>
+    <h2 class="section-title" style="color:var(--white)">Features no other<br>WhatsApp platform has</h2>
+
+    <div class="unique-grid">
+      <div class="unique-card">
+        <div class="unique-card-num">01</div>
+        <div class="unique-card-title">AI That Learns From Conversations</div>
+        <div class="unique-card-desc">Every time the bot gets something wrong and a human corrects it, that correction is automatically fed back into the AI knowledge base. Your bot literally improves itself every single day — no manual retraining needed.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+      <div class="unique-card">
+        <div class="unique-card-num">02</div>
+        <div class="unique-card-title">WhatsApp-Native E-commerce</div>
+        <div class="unique-card-desc">Build your entire product catalogue inside ALFA. Customers browse products, add to cart, and complete orders entirely within WhatsApp. Inventory syncs to Google Sheets. No separate website needed.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+      <div class="unique-card">
+        <div class="unique-card-num">03</div>
+        <div class="unique-card-title">Complete Customer CRM</div>
+        <div class="unique-card-desc">Every customer who messages you gets a full profile — conversation history, orders placed, appointments booked, preferences, tags. Segment customers and send targeted broadcasts to the right people.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+      <div class="unique-card">
+        <div class="unique-card-num">04</div>
+        <div class="unique-card-title">Self-Hosted — Your Data, Your Server</div>
+        <div class="unique-card-desc">Unlike Wati and Interakt, ALFA runs on your own server. Your customer conversations, business data, and AI models never touch anyone else's infrastructure. Complete privacy and compliance.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+      <div class="unique-card">
+        <div class="unique-card-num">05</div>
+        <div class="unique-card-title">Live Google Sheets Database</div>
+        <div class="unique-card-desc">Your Google Sheet IS your database. Change a price in the sheet at 2PM — by 2:01PM the bot is already quoting the new price. No redeployment, no config changes. Just edit the sheet.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+      <div class="unique-card">
+        <div class="unique-card-num">06</div>
+        <div class="unique-card-title">Broadcast Cost Preview</div>
+        <div class="unique-card-desc">Before sending any broadcast, see the exact estimated Meta API charge. No surprise bills. Know your cost before you click send. Set monthly broadcast budgets and get alerts before you overspend.</div>
+        <span class="unique-badge">Exclusive</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="compare-section" id="compare">
+  <div class="compare-inner">
+    <div style="text-align:center">
+      <div class="section-eyebrow" style="justify-content:center">Comparison</div>
+      <h2 class="section-title" style="text-align:center">ALFA vs The Competition</h2>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="alfa-col">✦ ALFA</th>
+          <th>Wati</th>
+          <th>Interakt</th>
+          <th>AiSensy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>WhatsApp Business API</td><td class="check-alfa">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+        <tr><td>AI-Powered Replies</td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td>Self-Hosted AI (Ollama)</td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td><strong>AI Learns From Conversations</strong></td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td><strong>Built-in CRM</strong></td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td><strong>E-commerce Store Builder</strong></td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-yes">✓</td><td class="check-no">–</td></tr>
+        <tr><td><strong>Google Sheets Sync</strong></td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td>Broadcast Campaigns</td><td class="check-alfa">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td></tr>
+        <tr><td>Visual Flow Builder</td><td class="check-alfa">✓</td><td class="check-yes">✓</td><td class="check-no">–</td><td class="check-yes">✓</td></tr>
+        <tr><td>Appointment Reminders</td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td><strong>Broadcast Cost Estimator</strong></td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td>Self-Hosted Option</td><td class="check-alfa">✓</td><td class="check-no">–</td><td class="check-no">–</td><td class="check-no">–</td></tr>
+        <tr><td>Starting Price</td><td style="color:var(--blue2);font-weight:700">₹999/mo</td><td>₹2,499/mo</td><td>₹2,000/mo</td><td>₹999/mo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-eyebrow">Setup Process</div>
+    <h2 class="section-title">Live in under<br>30 minutes</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-step-num">1</div><div class="how-step-line"></div></div>
+        <div class="how-step-content">
+          <div class="how-step-title">Connect your WhatsApp Business API</div>
+          <div class="how-step-desc">Paste your Meta Phone Number ID and Access Token from your Meta Developer Console. ALFA automatically registers the webhook — you never touch Meta's dashboard again.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-step-num">2</div><div class="how-step-line"></div></div>
+        <div class="how-step-content">
+          <div class="how-step-title">Train the AI on your business</div>
+          <div class="how-step-desc">Upload your menu, service list, FAQs, or policies as PDFs or text. Connect your Google Sheet for live product/service data. The AI is trained in minutes.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-step-num">3</div><div class="how-step-line"></div></div>
+        <div class="how-step-content">
+          <div class="how-step-title">Set up your flows</div>
+          <div class="how-step-desc">Use the visual flow builder or let AI handle everything automatically. Configure appointment booking, order taking, FAQ responses, and escalation to human agents.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-left"><div class="how-step-num">4</div></div>
+        <div class="how-step-content">
+          <div class="how-step-title">Go live — bot works 24×7</div>
+          <div class="how-step-desc">Your AI assistant starts handling customer conversations immediately. Monitor everything from the dashboard. The AI learns and improves with every interaction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div style="text-align:center;margin-bottom:8px">
+      <div class="section-eyebrow" style="justify-content:center">Pricing</div>
+      <h2 class="section-title" style="text-align:center">Simple, transparent pricing</h2>
+      <p style="color:var(--text2);font-size:15px">WhatsApp API charges billed separately by Meta directly to your account</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Starter</div>
+        <div class="price-amount"><sup>₹</sup>999</div>
+        <div class="price-mo">per month</div>
+        <div class="price-desc">For solo businesses, small clinics, and local services just getting started with WhatsApp automation</div>
+        <ul class="price-list">
+          <li>1 WhatsApp number</li>
+          <li>500 AI conversations/month</li>
+          <li>Knowledge base (10 documents)</li>
+          <li>Appointments + Orders</li>
+          <li>Google Sheets sync</li>
+          <li>Basic CRM</li>
+          <li>Web dashboard</li>
+          <li class="no">Broadcasts</li>
+          <li class="no">E-commerce store</li>
+          <li class="no">Auto-learning AI</li>
+          <li class="no">Mobile app</li>
+        </ul>
+        <a href="/register" class="price-btn price-btn-outline">Get Started Free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-popular">Most Popular</div>
+        <div class="price-tier">Professional</div>
+        <div class="price-amount"><sup>₹</sup>2,499</div>
+        <div class="price-mo">per month</div>
+        <div class="price-desc">For growing restaurants, salons, and e-commerce stores that need full automation with AI learning</div>
+        <ul class="price-list">
+          <li>1 WhatsApp number</li>
+          <li>Unlimited AI conversations</li>
+          <li>Unlimited knowledge base</li>
+          <li>Everything in Starter</li>
+          <li>Auto-learning AI ✦</li>
+          <li>Full CRM with segments</li>
+          <li>E-commerce store builder ✦</li>
+          <li>Broadcast campaigns</li>
+          <li>Appointment reminders</li>
+          <li>Analytics dashboard</li>
+          <li>Mobile app (iOS + Android)</li>
+        </ul>
+        <a href="/register" class="price-btn price-btn-fill">Start Free Trial</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Business</div>
+        <div class="price-amount"><sup>₹</sup>5,999</div>
+        <div class="price-mo">per month</div>
+        <div class="price-desc">For chains, franchises, and businesses that need multi-number support and team collaboration</div>
+        <ul class="price-list">
+          <li>Up to 3 WhatsApp numbers</li>
+          <li>Unlimited everything</li>
+          <li>Everything in Professional</li>
+          <li>5 team member seats</li>
+          <li>Role-based access control</li>
+          <li>Webhook integrations</li>
+          <li>Priority support</li>
+          <li>Dedicated onboarding</li>
+          <li>Custom AI fine-tuning</li>
+          <li>SLA guarantee</li>
+          <li>White-label option</li>
+        </ul>
+        <a href="/register" class="price-btn price-btn-outline">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title">Ready to put your<br><span>WhatsApp on autopilot?</span></h2>
+  <p class="cta-body">Start your free 14-day trial. No credit card required. Full access to all Professional features. Cancel anytime.</p>
+  <div class="cta-form">
+    <input type="email" class="cta-input" placeholder="Enter your business email">
+    <button class="btn-hero btn-hero-primary" style="white-space:nowrap">Get Started Free →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-logo">
+          <div class="footer-brand-mark">A</div>
+          <div class="footer-brand-name">ALFA</div>
+        </div>
+        <p class="footer-brand-desc">The intelligent WhatsApp Business Platform. Self-hosted AI, built-in CRM, and e-commerce — all in one platform.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#compare">Compare</a></li>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/changelog">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/status">System Status</a></li>
+          <li><a href="/community">Community</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#4a393f3a3a25383e0a2b262c2b642324">Email Support</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 ALFA Platform. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/dpdpa">DPDPA Compliance</a>
+      </div>
+    </div
